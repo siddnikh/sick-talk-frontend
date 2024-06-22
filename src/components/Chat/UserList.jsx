@@ -19,27 +19,36 @@ const UserList = ({ users, setUsers, selectUser, selectedUser }) => {
     });
   };
 
-  const handleCompose = async () => {
-    try {
-      const response = await api.get(`/users/exists/${newUsername}`);
-      if (response.status !== 200) {
-        setErrorMessage("Utilisateur non trouvé :(");
-      } else {
-        const result = response.data;
+const handleCompose = async () => {
+  try {
+    const response = await api.get(`/users/exists/${newUsername}`);
+    if (response.status !== 200) {
+      setErrorMessage("Utilisateur non trouvé :(");
+    } else {
+      const result = response.data;
+      
+      // Check if the user already exists in prevUsers
+      const userExists = users.some(user => user._id === result.id);
+
+      if (!userExists) {
+        // Add the user to users list
         setUsers((prevUsers) => [
           ...prevUsers,
           { _id: result.id, username: result.username, unread: false, role: result.role },
         ]);
-        selectUser({ _id: result.id, username: result.username, role: result.role });
-        setComposeMode(false);
-        setNewUsername("");
-        setErrorMessage("");
       }
-    } catch (error) {
-      console.error("Erreur lors de la vérification de l&apos;utilisateur:", error);
-      setErrorMessage(error.response?.data?.message || "Utilisateur non trouvé");
+
+      // Select the user and update state
+      selectUser({ _id: result.id, username: result.username, role: result.role });
+      setComposeMode(false);
+      setNewUsername("");
+      setErrorMessage("");
     }
-  };
+  } catch (error) {
+    console.error("Erreur lors de la vérification de l'utilisateur:", error);
+    setErrorMessage(error.response?.data?.message || "Utilisateur non trouvé");
+  }
+};
 
   return (
     <div className="w-full md:w-1/3 border-r bg-gray-200 border-white text-black h-screen overflow-y-auto">
