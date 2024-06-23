@@ -46,7 +46,7 @@ const MessageList = ({ messages, selectedUser }) => {
             className={`rounded-lg p-3 max-w-xs md:max-w-md ${
               message.sender._id === selectedUser._id
                 ? "bg-gray-200 text-black animate-fade-in-left"
-                : "bg-blue-500 text-white animate-fade-in-right"
+                : "bg-[#12bb7d] text-white animate-fade-in-right"
             }`}
           >
             {message.message.type === "text" ? (

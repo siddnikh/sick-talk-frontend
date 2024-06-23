@@ -39,7 +39,7 @@ const MessageInput = ({ sendMessage, uploadFile }) => {
         onChange={handleFileChange}
         className="ml-2 p-2 bg-gray-200 text-black rounded-md"
       />
-      <button type="submit" className="ml-2 p-2 bg-blue-500 text-white rounded-md">
+      <button type="submit" className="ml-2 p-2 bg-[#12bb7d] text-white rounded-md">
         Envoyer
       </button>
     </form>

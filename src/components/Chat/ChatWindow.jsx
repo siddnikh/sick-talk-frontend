@@ -97,8 +97,11 @@ const ChatWindow = ({
   }
 
   return (
-    <div className="w-full flex flex-col h-screen">
-      <div className="flex-grow overflow-y-auto">
+    <div className="w-full flex flex-col justify-between max-h-screen">
+      <div className="p-4 h-16 bg-white text-black border-2 border-b-2 border-l-0">
+        <h2 className="text-lg font-semibold">{selectedUser.username}</h2>
+      </div>
+      <div className="overflow-y-auto">
         <MessageList messages={messages} selectedUser={selectedUser} />
       </div>
       <div className="border-t bg-white border-gray-200 p-4">
@@ -111,6 +114,8 @@ const ChatWindow = ({
 ChatWindow.propTypes = {
   selectedUser: PropTypes.shape({
     _id: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+    role: PropTypes.string,
   }).isRequired,
   addUnreadMessage: PropTypes.func.isRequired,
   users: PropTypes.arrayOf(

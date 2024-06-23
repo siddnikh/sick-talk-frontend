@@ -36,14 +36,14 @@ const ChatInterface = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen">
-      <div className="bg-blue-600 text-white p-4 flex justify-between items-center">
+    <div className="h-screen w-screen bg-white">
+      <div className="bg-white text-black p-4 flex justify-between border-b-2 border-gray-200 items-center">
         <h1 className="text-lg md:text-2xl">Chat</h1>
-        <Link to="/tasks" className="text-sm md:text-base bg-white text-blue-600 px-3 py-2 rounded-md hover:bg-gray-200 transition">
+        <Link to="/tasks" className="text-sm md:text-base bg-[#12bb7d] text-white px-3 py-2 rounded-md hover:bg-green-300 hover:text-white transition">
           Aller aux Tâches
         </Link>
       </div>
-      <div className="flex flex-grow">
+      <div className="flex">
         <UserList
           users={users}
           setUsers={setUsers}
