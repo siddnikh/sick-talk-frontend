@@ -1,144 +1,200 @@
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import api from "../../services/api";
 
-const UserList = ({ users, setUsers, selectUser, selectedUser }) => {
-  const [composeMode, setComposeMode] = useState(false);
-  const [newUsername, setNewUsername] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [userRole, setUserRole] = useState("");
+const AdminTasks = () => {
+  const [tasks, setTasks] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [description, setDescription] = useState("");
+  const [reward, setReward] = useState("");
+  const [assignedTo, setAssignedTo] = useState("");
+  const [showPending, setShowPending] = useState(true);
+  const [showCompleted, setShowCompleted] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        const response = await api.get("/auth/me");
-        setUserRole(response.data.role);
-      } catch (error) {
-        console.error("Error fetching user details:", error);
-      }
+    const fetchTasks = async () => {
+      const response = await api.get("/tasks");
+      setTasks(response.data);
     };
+    fetchTasks();
 
+    const fetchUsers = async () => {
+      const response = await api.get("/users");
+      setUsers(response.data);
+    };
+    fetchUsers();
+
+    const fetchUserDetails = async () => {
+      const response = await api.get("/auth/me");
+      setUsername(response.data.username);
+    };
     fetchUserDetails();
   }, []);
 
-  const handleUserSelect = (user) => {
-    selectUser(user);
-    setUsers((prevUsers) =>
-      prevUsers.map((u) =>
-        user._id === u._id ? { ...user, unread: false } : u
-      )
-    );
-  };
-
-  const handleCompose = async () => {
+  const handleAssignTask = async () => {
     try {
-      const response = await api.get(`/users/exists/${newUsername}`);
-      if (response.status !== 200) {
-        setErrorMessage("Utilisateur non trouvé :(");
-      } else {
-        const result = response.data;
-
-        const userExists = users.some((user) => user._id === result.id);
-
-        if (!userExists) {
-          setUsers((prevUsers) => [
-            ...prevUsers,
-            {
-              _id: result.id,
-              username: result.username,
-              unread: false,
-              role: result.role,
-            },
-          ]);
-        }
-
-        selectUser({
-          _id: result.id,
-          username: result.username,
-          role: result.role,
-        });
-        setComposeMode(false);
-        setNewUsername("");
-        setErrorMessage("");
-      }
+      await api.post("/tasks/create", { assignedTo, description, reward });
+      const response = await api.get("/tasks");
+      setTasks(response.data);
+      setDescription("");
+      setReward("");
+      setAssignedTo("");
+      showAlertMessage("Tâche assignée avec succès !");
     } catch (error) {
-      console.error("Erreur lors de la vérification de l'utilisateur:", error);
-      setErrorMessage(error.response?.data?.message || "Utilisateur non trouvé");
+      console.error("Erreur lors de l&apos;attribution de la tâche:", error);
     }
   };
 
+  const handleCompleteTask = async (taskId) => {
+    try {
+      await api.post("/tasks/complete", { taskId });
+      const response = await api.get("/tasks");
+      setTasks(response.data);
+      showAlertMessage("Tâche marquée comme terminée !");
+    } catch (error) {
+      console.error("Erreur lors de la complétion de la tâche:", error);
+    }
+  };
+
+  const showAlertMessage = (message) => {
+    setAlertMessage(message);
+    setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 3000);
+  };
+
   return (
-    <div className="w-full md:w-1/3 border-r bg-gray-200 border-white text-black h-screen overflow-y-auto">
-      {userRole === "user" ? null : (
-        <button
-          className="w-full p-4 bg-green-500 text-white font-bold"
-          onClick={() => {
-            setComposeMode(!composeMode);
-            setNewUsername("");
-            setErrorMessage("");
-          }}
-        >
-          Composer
-        </button>
+    <div className="w-screen p-4 md:p-6 bg-gray-100 min-h-screen">
+      {showAlert && (
+        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg animate-fade-in-out">
+          {alertMessage}
+        </div>
       )}
-      {composeMode && (
-        <div className="p-4 bg-white border-b border-gray-300">
+      <h2 className="text-xl md:text-2xl font-bold text-blue-600 mb-4">Tableau de Bord des Tâches Admin</h2>
+      <div className="bg-white p-4 md:p-6 rounded-lg shadow-md mb-4 md:mb-6">
+        <h3 className="text-lg md:text-xl font-semibold text-gray-700 mb-4">Bienvenue, {username}</h3>
+        <h3 className="text-lg md:text-xl font-semibold text-gray-700 mb-4">Attribuer une Nouvelle Tâche</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-black">
           <input
             type="text"
-            value={newUsername}
-            onChange={(e) => setNewUsername(e.target.value)}
-            placeholder="Entrez le nom d'utilisateur"
-            className="w-full p-2 border bg-white border-gray-300 rounded mb-2"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Description de la Tâche"
+            className="p-2 md:p-3 border bg-gray-100 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button
-            onClick={handleCompose}
-            className="w-full p-2 bg-blue-500 text-white rounded"
+          <input
+            type="number"
+            value={reward}
+            onChange={(e) => setReward(e.target.value)}
+            placeholder="Récompense (€)"
+            className="p-2 md:p-3 border bg-gray-100 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <select
+            value={assignedTo}
+            onChange={(e) => setAssignedTo(e.target.value)}
+            className="p-2 md:p-3 border bg-gray-100 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            Envoyer
-          </button>
-          {errorMessage && (
-            <div className="text-red-500 mt-2 animate-pulse">{errorMessage}</div>
-          )}
+            <option value="">Sélectionner un Utilisateur</option>
+            {users.map((user) => (
+              <option key={user._id} value={user._id}>
+                {user.username}
+              </option>
+            ))}
+          </select>
         </div>
-      )}
-      {users.map((user) => (
-        <div
-          key={user._id}
-          onClick={() => handleUserSelect(user)}
-          className={`relative p-8 cursor-pointer flex items-center justify-between ${
-            selectedUser?._id === user._id
-              ? "bg-blue-500 text-white font-bold duration-500 transform scale-105 rounded-md"
-              : user.role === "admin"
-              ? "bg-yellow-500 text-white font-bold duration-500 transform scale-105 rounded-md"
-              : ""
-          }`}
+        <button
+          onClick={handleAssignTask}
+          className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300 w-full md:w-auto"
         >
-          <span>{user.username}</span>
-          {user.unread && (
-            <span className="w-3 h-3 bg-blue-600 rounded-full inline-block"></span>
-          )}
+          Attribuer la Tâche
+        </button>
+      </div>
+      <div className="bg-white p-4 md:p-6 rounded-lg shadow-md mb-4 md:mb-6">
+        <div
+          className="flex justify-between items-center cursor-pointer"
+          onClick={() => setShowPending(!showPending)}
+        >
+          <h3 className="text-lg md:text-xl font-semibold text-gray-700">Tâches en Attente</h3>
+          {showPending ? <FaChevronUp /> : <FaChevronDown />}
         </div>
-      ))}
+        {showPending && (
+          <ul className="space-y-4 mt-4">
+            {tasks.filter(task => task.status === "pending").length === 0 && (
+              <li className="text-gray-500">Aucune tâche en attente à afficher</li>
+            )}
+            {tasks.filter(task => task.status === "pending").map((task) => (
+              <li
+                key={task._id}
+                className="p-4 border border-gray-300 rounded-lg bg-gray-50 flex flex-col md:flex-row justify-between items-start md:items-center"
+              >
+                <div className="w-full md:w-auto">
+                  <p className="text-gray-700">
+                    <strong>Description :</strong> {task.description}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>Récompense :</strong> {task.reward} €
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>Attribué à :</strong> {task.assignedTo.username}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>Statut :</strong> {task.status}
+                  </p>
+                </div>
+                {task.status === "pending" && (
+                  <button
+                    onClick={() => handleCompleteTask(task._id)}
+                    className="mt-4 md:mt-0 ml-0 md:ml-4 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300 w-full md:w-auto"
+                  >
+                    Marquer comme Terminée
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <div className="bg-white p-4 md:p-6 rounded-lg shadow-md">
+        <div
+          className="flex justify-between items-center cursor-pointer"
+          onClick={() => setShowCompleted(!showCompleted)}
+        >
+          <h3 className="text-lg md:text-xl font-semibold text-gray-700">Tâches Terminées</h3>
+          {showCompleted ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        {showCompleted && (
+          <ul className="space-y-4 mt-4">
+            {tasks.filter(task => task.status === "completed").length === 0 && (
+              <li className="text-gray-500">Aucune tâche terminée à afficher</li>
+            )}
+            {tasks.filter(task => task.status === "completed").map((task) => (
+              <li
+                key={task._id}
+                className="p-4 border border-gray-300 rounded-lg bg-gray-50"
+              >
+                <p className="text-gray-700">
+                  <strong>Description :</strong> {task.description}
+                </p>
+                <p className="text-gray-700">
+                  <strong>Récompense :</strong> {task.reward} €
+                </p>
+                <p className="text-gray-700">
+                  <strong>Attribué à :</strong> {task.assignedTo.username}
+                </p>
+                <p className="text-gray-700">
+                  <strong>Statut :</strong> {task.status}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };
 
-UserList.propTypes = {
-  users: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      username: PropTypes.string.isRequired,
-      unread: PropTypes.bool,
-      role: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  setUsers: PropTypes.func.isRequired,
-  selectUser: PropTypes.func.isRequired,
-  selectedUser: PropTypes.shape({
-    _id: PropTypes.string,
-    username: PropTypes.string,
-    role: PropTypes.string,
-  }),
-};
-
-export default UserList;
+export default AdminTasks;
