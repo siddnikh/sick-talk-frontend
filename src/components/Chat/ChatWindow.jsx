@@ -4,6 +4,7 @@ import { useSocket } from "../../hooks/useSocket";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
 import api from "../../services/api";
+import { Link } from "react-router-dom";
 
 const ChatWindow = ({
   selectedUser,
@@ -26,7 +27,12 @@ const ChatWindow = ({
     if (socket && selectedUser) {
       const handleReceiveMessage = (message) => {
         // if the message is from a new user, then:
-        if (!users.find((user) => user._id === message.sender._id || userId === message.sender._id)) {
+        if (
+          !users.find(
+            (user) =>
+              user._id === message.sender._id || userId === message.sender._id
+          )
+        ) {
           addNewUserToList(message.sender);
         }
 
@@ -76,13 +82,20 @@ const ChatWindow = ({
     reader.onload = function (e) {
       const buffer = e.target.result;
 
-      socket.emit("uploadFile", { file: buffer, fileName: file.name, recipient: selectedUser._id }, (response) => {
-        if (response.error) {
-          console.error('Erreur lors du téléversement du fichier:', response.error);
-        } else {
-          sendMessage({ type: 'media', url: response.url });
+      socket.emit(
+        "uploadFile",
+        { file: buffer, fileName: file.name, recipient: selectedUser._id },
+        (response) => {
+          if (response.error) {
+            console.error(
+              "Erreur lors du téléversement du fichier:",
+              response.error
+            );
+          } else {
+            sendMessage({ type: "media", url: response.url });
+          }
         }
-      });
+      );
     };
 
     reader.readAsArrayBuffer(file);
@@ -91,15 +104,22 @@ const ChatWindow = ({
   if (!selectedUser) {
     return (
       <div className="w-full md:w-2/3 text-black p-4">
-        Sélectionnez un utilisateur pour commencer à discuter ou composer un message à un utilisateur
+        Sélectionnez un utilisateur pour commencer à discuter ou composer un
+        message à un utilisateur
       </div>
     );
   }
 
   return (
     <div className="w-full flex flex-col justify-between max-h-screen">
-      <div className="p-4 h-16 bg-white text-black border-2 border-b-2 border-l-0">
+      <div className="p-4 h-16 bg-white text-black border-2 flex items-center justify-between border-b-2 border-l-0">
         <h2 className="text-lg font-semibold">{selectedUser.username}</h2>
+        <Link
+          to="/tasks"
+          className="text-sm md:text-base bg-[#12bb7d] text-white px-3 py-2 rounded-md hover:bg-green-300 hover:text-white transition"
+        >
+          Aller aux Tâches
+        </Link>
       </div>
       <div className="overflow-y-auto">
         <MessageList messages={messages} selectedUser={selectedUser} />

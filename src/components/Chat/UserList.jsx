@@ -19,6 +19,7 @@ const UserList = ({ users, setUsers, selectUser, selectedUser }) => {
 
   return (
     <div className="w-full h-screen md:w-1/3 border-r-2 bg-white border-gray-200 text-black overflow-y-auto">
+      <h1 className="text-lg md:text-2xl p-4 border-b-2">Chat</h1>
       <div className="p-4 bg-white">
         <input
           type="text"

@@ -64,7 +64,7 @@ const Login = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="w-full px-3 py-2 mt-1 bg-white text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 mt-1 bg-white text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-[#12bb7d] focus:border-[#12bb7d]"
             />
           </div>
           <div>
@@ -76,12 +76,12 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 mt-1 bg-white text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 mt-1 bg-white text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-[#12bb7d] focus:border-[#12bb7d]"
             />
           </div>
           <button
             type="submit"
-            className="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="w-full px-4 py-2 font-medium text-white bg-[#12bb7d] rounded-md hover:bg-[#12bb7f] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#12bb7d]"
           >
             Connexion
           </button>
@@ -90,7 +90,7 @@ const Login = () => {
           Vous n&apos;avez pas de compte?{" "}
           <Link
             to="/register"
-            className="font-medium text-indigo-600 hover:text-indigo-500"
+            className="font-medium text-[#12bb7d] hover:text-[#12bb7d]"
           >
             Inscription
           </Link>
