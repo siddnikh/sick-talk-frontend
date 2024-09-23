@@ -61,6 +61,7 @@ const MessageList = ({ messages, selectedUser }) => {
                 <a
                   href={`${REACT_APP_API_URL}${message.message.url}`}
                   download
+                  target="_blank"
                   className="text-[#FDB1D7] hover:text-pink-300 flex items-center mt-4"
                 >
                   <FaDownload className="w-5 h-5 ml-2" />{" "}
