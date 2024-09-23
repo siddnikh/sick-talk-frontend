@@ -6,7 +6,7 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const role = "user";
+  const [role, setRole] = useState("user"); // Default role
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const { register } = useAuth();
@@ -62,11 +62,11 @@ const Register = () => {
               required
               className="w-full px-3 py-2 mt-1 bg-white text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-[#12bb7d] focus:border-[#12bb7d]"
             />
-             <label className="block mt-4 text-sm font-medium text-gray-700">
+            <label className="block mt-4 text-sm font-medium text-gray-700">
               Email :
             </label>
             <input
-              type="text"
+              type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -86,6 +86,19 @@ const Register = () => {
               required
               className="w-full px-3 py-2 mt-1 bg-white text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-[#12bb7d] focus:border-[#12bb7d]"
             />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Rôle :
+            </label>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full px-3 py-2 mt-1 bg-white text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-[#12bb7d] focus:border-[#12bb7d]"
+            >
+              <option value="user">Utilisateur</option>
+              <option value="admin">Admin</option>
+            </select>
           </div>
           <button
             type="submit"

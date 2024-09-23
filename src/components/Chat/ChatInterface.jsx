@@ -10,7 +10,7 @@ const ChatInterface = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("user");
+    const token = localStorage.getItem("sickuser");
     if (!token) {
       navigate("/login");
     }
@@ -36,7 +36,12 @@ const ChatInterface = () => {
   };
 
   return (
-    <div className="h-screen w-screen bg-white">
+    <div
+      className="h-screen w-screen bg-[#421770]"
+      style={{
+        fontFamily: "'Pixelify Sans', sans-serif", // Applying Pixelify Sans font
+      }}
+    >
       <div className="flex">
         <UserList
           users={users}

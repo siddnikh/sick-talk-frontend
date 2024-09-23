@@ -6,7 +6,7 @@ export const useSocket = () => {
     const socketRef = useRef();
 
     useEffect(() => {
-        const token = JSON.parse(localStorage.getItem('user'))?.token;
+        const token = JSON.parse(localStorage.getItem('sickuser'))?.token;
         if (token) {
             socketRef.current = io(REACT_APP_API_URL, {
                 auth: {

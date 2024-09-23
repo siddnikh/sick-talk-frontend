@@ -4,7 +4,6 @@ import { useSocket } from "../../hooks/useSocket";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
 import api from "../../services/api";
-import { Link } from "react-router-dom";
 
 const ChatWindow = ({
   selectedUser,
@@ -15,7 +14,7 @@ const ChatWindow = ({
   const [messages, setMessages] = useState([]);
   const socket = useSocket();
 
-  const userId = JSON.parse(localStorage.getItem("user"))?._id;
+  const userId = JSON.parse(localStorage.getItem("sickuser"))?._id;
 
   useEffect(() => {
     if (selectedUser) {
@@ -26,7 +25,6 @@ const ChatWindow = ({
   useEffect(() => {
     if (socket && selectedUser) {
       const handleReceiveMessage = (message) => {
-        // if the message is from a new user, then:
         if (
           !users.find(
             (user) =>
@@ -63,7 +61,7 @@ const ChatWindow = ({
       const response = await api.get(`/chat/messages/${userId}`);
       return response.data;
     } catch (error) {
-      console.error("Erreur lors de la récupération des messages:", error);
+      console.error("Error fetching messages:", error);
       return [];
     }
   };
@@ -87,10 +85,7 @@ const ChatWindow = ({
         { file: buffer, fileName: file.name, recipient: selectedUser._id },
         (response) => {
           if (response.error) {
-            console.error(
-              "Erreur lors du téléversement du fichier:",
-              response.error
-            );
+            console.error("Error uploading file:", response.error);
           } else {
             sendMessage({ type: "media", url: response.url });
           }
@@ -103,28 +98,22 @@ const ChatWindow = ({
 
   if (!selectedUser) {
     return (
-      <div className="w-full md:w-2/3 text-black p-4">
-        Sélectionnez un utilisateur pour commencer à discuter ou composer un
-        message à un utilisateur
+      <div className="w-full text-2xl text-[#FDB1D7] p-4">
+        *sigh* <br />
+        select a user.
       </div>
     );
   }
 
   return (
     <div className="w-full flex flex-col justify-between max-h-screen">
-      <div className="p-4 h-16 bg-white text-black border-2 flex items-center justify-between border-b-2 border-l-0">
+      <div className="p-4 h-16 bg-[#421770] text-[#FDB1D7] border-2 flex items-center justify-between border-b-2 border-l-0 border-[#FDB1D7]">
         <h2 className="text-lg font-semibold">{selectedUser.username}</h2>
-        <Link
-          to="/tasks"
-          className="text-sm md:text-base bg-[#12bb7d] text-white px-3 py-2 rounded-md hover:bg-green-300 hover:text-white transition"
-        >
-          Aller aux Tâches
-        </Link>
       </div>
       <div className="overflow-y-auto">
         <MessageList messages={messages} selectedUser={selectedUser} />
       </div>
-      <div className="border-t bg-white border-gray-200 p-4">
+      <div className="border-t bg-[#421770] border-[#FDB1D7] p-4">
         <MessageInput sendMessage={sendMessage} uploadFile={uploadFile} />
       </div>
     </div>

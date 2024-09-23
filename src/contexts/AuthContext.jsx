@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        const storedUser = JSON.parse(localStorage.getItem('user'));
+        const storedUser = JSON.parse(localStorage.getItem('sickuser'));
         if (storedUser) {
             setUser(storedUser);
         }
@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (username, password) => {
         const response = await loginService(username, password);
         if (response.status === 200) setUser(response.data);
-        localStorage.setItem('user', JSON.stringify(response.data));
+        localStorage.setItem('sickuser', JSON.stringify(response.data));
         return response;
     };
 
@@ -27,7 +27,8 @@ export const AuthProvider = ({ children }) => {
 
     const logout = () => {
         setUser(null);
-        localStorage.removeItem('user');
+        localStorage.removeItem('sickuser');
+        window.location.href = '/';
     };
 
     return (

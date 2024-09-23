@@ -12,7 +12,7 @@ const MessageInput = ({ sendMessage, uploadFile }) => {
         await uploadFile(file);
         setFile(null);
       } catch (error) {
-        console.error("Erreur lors du téléversement du fichier:", error);
+        console.error("Error uploading the file:", error);
       }
     } else {
       sendMessage({ type: "text", content: messageContent });
@@ -25,22 +25,22 @@ const MessageInput = ({ sendMessage, uploadFile }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white flex">
+    <form onSubmit={handleSubmit} className="bg-[#421770] flex p-4">
       <input
         type="text"
         value={messageContent}
         onChange={(e) => setMessageContent(e.target.value)}
-        className="flex-grow p-2 border bg-white text-black border-gray-300 rounded-md"
-        placeholder="Tapez un message"
+        className="flex-grow p-2 border bg-gray-800 text-[#FDB1D7] border-[#FDB1D7] rounded-md focus:outline-none"
+        placeholder="Type a message"
         required={!file}
       />
       <input
         type="file"
         onChange={handleFileChange}
-        className="ml-2 p-2 bg-gray-200 text-black rounded-md"
+        className="ml-2 p-2 bg-gray-800 border-[#FDB1D7] rounded-md"
       />
-      <button type="submit" className="ml-2 p-2 bg-[#12bb7d] text-white rounded-md">
-        Envoyer
+      <button type="submit" className="ml-2 p-2 bg-blue-700 text-white rounded-md">
+        Send
       </button>
     </form>
   );

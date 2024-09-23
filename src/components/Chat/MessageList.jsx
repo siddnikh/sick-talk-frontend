@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useEffect, useRef } from "react";
-import { FaPaperclip } from "react-icons/fa";
+import { FaDownload } from "react-icons/fa";
 import { REACT_APP_API_URL } from "../../../constants.json";
 
 const MessageList = ({ messages, selectedUser }) => {
@@ -32,7 +32,7 @@ const MessageList = ({ messages, selectedUser }) => {
   }, [messages]);
 
   return (
-    <div className="bg-white h-full p-4 flex flex-col space-y-4 overflow-y-auto">
+    <div className="bg-[#421770] h-full p-4 flex flex-col space-y-4 overflow-y-auto overflow-x-clip">
       {messages.map((message, index) => (
         <div
           key={index}
@@ -45,25 +45,29 @@ const MessageList = ({ messages, selectedUser }) => {
           <div
             className={`rounded-lg p-3 max-w-xs md:max-w-md ${
               message.sender._id === selectedUser._id
-                ? "bg-gray-200 text-black animate-fade-in-left"
-                : "bg-[#12bb7d] text-white animate-fade-in-right"
+                ? "bg-[#FDB1D7] text-gray-800 animate-fade-in-left"
+                : "bg-purple-600 text-white animate-fade-in-right"
             }`}
           >
             {message.message.type === "text" ? (
               <p>{message.message.content}</p>
             ) : (
-              <div className="flex items-center">
-                <FaPaperclip className="mr-2" />
+              <div className="flex-col flex items-center border-2 border-[#FDB1D7] p-2 rounded-md bg-[#421770] shadow-md">
+                <img
+                  src={`${REACT_APP_API_URL}${message.message.url}`}
+                  alt="Uploaded"
+                  className="w-full h-auto max-w-lg object-contain rounded-md mr-2" // Display full image
+                />
                 <a
                   href={`${REACT_APP_API_URL}${message.message.url}`}
                   download
-                  className="text-black underline"
+                  className="text-[#FDB1D7] hover:text-pink-300 flex items-center mt-4"
                 >
-                  {message.message.url.split('/').pop()}
+                  <FaDownload className="w-5 h-5 ml-2" />{" "}
                 </a>
               </div>
             )}
-            <span className="text-sm block mt-2">
+            <span className="text-sm block mt-2 text-white">
               {formatTimestamp(message.timestamp)}
             </span>
           </div>
