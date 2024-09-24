@@ -125,7 +125,7 @@ ChatWindow.propTypes = {
     _id: PropTypes.string.isRequired,
     username: PropTypes.string.isRequired,
     role: PropTypes.string,
-  }).isRequired,
+  }),
   addUnreadMessage: PropTypes.func.isRequired,
   users: PropTypes.arrayOf(
     PropTypes.shape({

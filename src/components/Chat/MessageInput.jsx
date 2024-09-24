@@ -31,14 +31,15 @@ const MessageInput = ({ sendMessage, uploadFile }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-[#421770] flex p-4 border-t border-[#FDB1D7]">
+    <form onSubmit={handleSubmit} className="bg-[#421770] flex p-4">
       <input
         type="text"
         value={messageContent}
         onChange={(e) => setMessageContent(e.target.value)}
         className="flex-grow p-2 bg-gray-800 text-[#FDB1D7] border-0 rounded-md focus:outline-none"
-        placeholder="Type a message"
+        placeholder={file ? "Image ready to send" : "Type a message"}
         required={!file}
+        disabled={!!file} // Disable input when a file is uploaded
       />
       <div
         onClick={handleIconClick}
@@ -53,8 +54,16 @@ const MessageInput = ({ sendMessage, uploadFile }) => {
         className="hidden" // Hide the default file input
         ref={fileInputRef} // Assign the ref to the file input
       />
-      <button type="submit" className="ml-2 p-2 bg-blue-700 text-white rounded-md focus:outline-1 focus:outline-[#FDB314]">
-        Send
+      {file && (
+        <div className="ml-2 p-2 text-[#FDB1D7]">
+          {file.name} uploaded
+        </div>
+      )}
+      <button
+        type="submit"
+        className="ml-2 p-2 bg-blue-700 text-white rounded-md focus:outline-1 focus:outline-[#FDB314]"
+      >
+        {file ? "Send Image" : "Send"}
       </button>
     </form>
   );

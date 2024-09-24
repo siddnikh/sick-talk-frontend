@@ -25,15 +25,16 @@ const App = () => {
 
 const RedirectToChat = () => {
     const navigate = useNavigate();
+    const currentPath = window.location.pathname;
 
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem('sickuser'));
         if (storedUser) {
             navigate('/chat');
-        } else {
+        } else if (currentPath !== '/yourenotsupposedtobehere') {
             navigate('/login');
         }
-    }, [navigate]);
+    }, [navigate, currentPath]); // Add currentPath to dependencies
 
     return null; // This component doesn't need to render anything
 };

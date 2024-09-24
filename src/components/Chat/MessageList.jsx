@@ -50,7 +50,7 @@ const MessageList = ({ messages, selectedUser }) => {
             }`}
           >
             {message.message.type === "text" ? (
-              <p>{message.message.content}</p>
+              <p>{message.message?.content}</p>
             ) : (
               <div className="flex-col flex items-center border-2 border-[#FDB1D7] p-2 rounded-md bg-[#421770] shadow-md">
                 <img
@@ -84,7 +84,7 @@ MessageList.propTypes = {
     PropTypes.shape({
       message: PropTypes.shape({
         type: PropTypes.string.isRequired,
-        content: PropTypes.string.isRequired,
+        content: PropTypes.string,
         url: PropTypes.string, // Optional: only for media messages
       }).isRequired,
       sender: PropTypes.shape({
@@ -96,7 +96,7 @@ MessageList.propTypes = {
   ).isRequired,
   selectedUser: PropTypes.shape({
     _id: PropTypes.string.isRequired,
-  }).isRequired,
+  }),
 };
 
 export default MessageList;
